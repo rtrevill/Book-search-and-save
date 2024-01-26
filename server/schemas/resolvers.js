@@ -15,6 +15,7 @@ const resolvers = {
 
   Mutation: {
     login: async (_,{username, email, password}) => {
+      console.log("Hello, I am here");
       const user = await User.findOne({ $or: [{ username: username }, { email: email }] });
       if (!user) {
         throw AuthenticationError;
@@ -31,7 +32,8 @@ const resolvers = {
     },
 
     createUser: async(_, {username, email, password}) => {
-      console.log(username)
+      console.log("You are in the back end")
+      console.log(username, email, password)
       const user = await User.create({username, email, password});
       const token = signToken(user)
       console.log(user)
