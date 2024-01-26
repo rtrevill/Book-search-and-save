@@ -19,7 +19,7 @@ const typeDefs = `
 
   type Query {
     users: [User]
-    user(userId: ID!): User
+    getSingleUser(userId: ID!): User
     login(username: String, email: String, password: String!): User
   }
 
