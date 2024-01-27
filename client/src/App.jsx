@@ -29,8 +29,10 @@ function App() {
   return (
     <>
       <ApolloProvider client={client}>
+        <div className="flex-column justify-flex-start min-100-vh">
         <Navbar />
         <Outlet />
+        </div>
       </ApolloProvider>
     </>
   );

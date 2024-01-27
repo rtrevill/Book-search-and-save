@@ -8,6 +8,7 @@ const resolvers = {
     },
 
     getSingleUser: async (_,{userId}) => {
+      console.log("Single user backend");
       return await User.findOne({_id: userId})
     },
 
@@ -41,6 +42,7 @@ const resolvers = {
     },
 
     saveBook: async(_,{userId, title, bookId, description, image, link, authors}) => {
+      console.log("I'm Here");
       const newBook = await User.findOneAndUpdate(
         {_id: userId},
         { $addToSet: { savedBooks: {
