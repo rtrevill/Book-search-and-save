@@ -17,8 +17,24 @@ import { QUERY_USER } from '../utils/queries';
 const SavedBooks = () => {
   const [userData, setUserData] = useState({});
 
+  const getID = Auth.getProfile().data._id;
+
+  const { loading, data } = useQuery(QUERY_USER, {
+      variables: { userId: getID}
+  })
+
+  const bookProfile = data;
+  console.log(bookProfile);
+
+  // setUserData(bookProfile.getSingleUser);
+  console.log(userData); 
+
   // use this to determine if `useEffect()` hook needs to run again
   const userDataLength = Object.keys(userData).length;
+
+
+
+  console.log(userDataLength);
 
   useEffect(() => {
     const getUserData = async () => {
@@ -27,16 +43,20 @@ const SavedBooks = () => {
 
         if (!token) {
           return false;
-        }
+        }  
+        // const response = await getMe(token);
 
-        const response = await getMe(token);
+        // if (!response.ok) {
+        //   throw new Error('something went wrong!');
+        // }
 
-        if (!response.ok) {
-          throw new Error('something went wrong!');
-        }
+        // const user = await response.json();
 
-        const user = await response.json();
-        setUserData(user);
+        // setUserData(user);
+
+        setUserData(bookProfile.getSingleUser);
+
+        console.log(userData);
       } catch (err) {
         console.error(err);
       }

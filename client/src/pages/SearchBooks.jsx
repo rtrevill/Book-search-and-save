@@ -15,7 +15,6 @@ import { CREATE_BOOK } from '../utils/mutations';
 
 import { saveBook, searchGoogleBooks } from '../utils/API';
 import { saveBookIds, getSavedBookIds } from '../utils/localStorage';
-import auth from '../utils/auth';
 
 const SearchBooks = () => {
   // create state for holding returned google api data
@@ -79,7 +78,7 @@ const SearchBooks = () => {
     }
 
     try {
-      const getID = auth.getProfile().data._id;
+      const getID = Auth.getProfile().data._id;
       console.log(bookToSave, getID);
 
       const { data } = await saveBook({
