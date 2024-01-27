@@ -8,7 +8,6 @@ const resolvers = {
     },
 
     getSingleUser: async (_,{userId}) => {
-      console.log("Single user backend");
       return await User.findOne({_id: userId})
     },
 
@@ -16,7 +15,6 @@ const resolvers = {
 
   Mutation: {
     login: async (_,{username, email, password}) => {
-      console.log("Hello, I am here");
       const user = await User.findOne({ $or: [{ username: username }, { email: email }] });
       if (!user) {
         throw AuthenticationError;
@@ -28,13 +26,12 @@ const resolvers = {
         throw AuthenticationError;
       }
       const token = signToken(user);
-      console.log("Login approved");
       return { token, user};  
     },
 
     createUser: async(_, {username, email, password}) => {
-      console.log("You are in the back end")
-      console.log(username, email, password)
+      // console.log("You are in the back end")
+      // console.log(username, email, password)
       const user = await User.create({username, email, password});
       const token = signToken(user)
       console.log(user)
@@ -42,7 +39,6 @@ const resolvers = {
     },
 
     saveBook: async(_,{userId, title, bookId, description, image, link, authors}) => {
-      console.log("I'm Here");
       const newBook = await User.findOneAndUpdate(
         {_id: userId},
         { $addToSet: { savedBooks: {
