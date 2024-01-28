@@ -28,3 +28,23 @@ export const QUERY_USER = gql`
         }
     }
 `;
+
+export const QUERY_ALL =  gql`
+    query users {
+        users {
+        _id
+        username
+        email
+        password
+        savedBooks {
+            _id
+            authors
+            description
+            bookId
+            image
+            link
+            title
+        }
+        }
+    }
+`;
