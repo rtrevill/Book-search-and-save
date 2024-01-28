@@ -8,7 +8,8 @@ const resolvers = {
     },
 
     getSingleUser: async (_,{userId}) => {
-      return await User.findOne({_id: userId})
+      return await User.findOne({_id: userId});
+      // return await User.findOne({_id: userId})
     },
 
   },
@@ -59,6 +60,7 @@ const resolvers = {
         { $pull: { savedBooks: { bookId: bookId } } },
         { new: true }
       );
+      // console.log(updatedUser);
       return updatedUser
       },
   },
