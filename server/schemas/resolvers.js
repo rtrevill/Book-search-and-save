@@ -60,7 +60,7 @@ const resolvers = {
         { $pull: { savedBooks: { bookId: bookId } } },
         { new: true }
       );
-      // console.log(updatedUser);
+      console.log(updatedUser);
       return updatedUser
       },
   },

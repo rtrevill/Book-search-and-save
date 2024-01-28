@@ -19,47 +19,38 @@ import { DELETE_BOOK } from '../utils/mutations';
 const SavedBooks = () => {
   const [userData, setUserData] = useState({});
 
-  const [deleteBook, {error: bookError, data: bookDetails}] = useMutation(DELETE_BOOK);
-
+  const [deleteBook, {error: bookError, data: bookDetails}] = useMutation(DELETE_BOOK, {
+    refetchQueries: [
+      QUERY_USER,
+        'getSingleUser'
+    ],
+   });
+  console.log(bookDetails);
   const getID = Auth.getProfile().data._id;
-  console.log(getID);
 
   const { loading, error, data } = useQuery(QUERY_USER, {
       variables: { userId: getID }
-  }, {onCompleted: setUserData});
-  console.log(data);
+      , pollInterval: 500
+  });
 
   const bookData = data?.getSingleUser || [];
-  
+
   if(!error&&!loading&&(bookData!==userData)){
     setUserData(bookData)
   }
-  // console.log(data.getSingleUser)
-  console.log(bookData.savedBooks);
-  // setUserData(data); 
 
-  // const bookProfile = data;
-  // console.log(bookProfile);
-
-  // setUserData(bookProfile.getSingleUser);
   console.log(userData); 
 
   // use this to determine if `useEffect()` hook needs to run again
   const userDataLength = Object.keys(userData).length;
 
-
-
   console.log(userDataLength);
 
   useEffect(() => {
-    // if (!error&&!loading){
-    //   setUserData(userData => bookData);
-    //   console.log("bookData");
-    // }
     const getUserData = async () => {
       try {
         const token = Auth.loggedIn() ? Auth.getToken() : null;
-        console.log(token)
+
         if (!token) {
           return false;
         }  
@@ -84,29 +75,34 @@ const SavedBooks = () => {
     };
 
     getUserData();
-  }, [userDataLength]);
-
+  }, [5]);
   // }, [userDataLength]);
+
 
   // create function that accepts the book's mongo _id value as param and deletes the book from the database
   const handleDeleteBook = async (bookId) => {
-    console.log(bookId)
+    // console.log(bookId)
     const token = Auth.loggedIn() ? Auth.getToken() : null;
 
     if (!token) {
       return false;
     }
-    const delBk = async() => {
+    // const delBk = async() => {
     try {
       const { bookDetails } = await deleteBook({
         variables: {
           bookId: bookId,
           userId: getID,
         }
-      })
+      }, {onCompleted: (data) => console.log(data)})
       removeBookId(bookId);
-
       console.log(bookDetails);
+      const bookCheck = bookDetails;
+      if(bookDetails){
+        console.log(bookCheck);
+        console.log("CHECKING");
+      }      
+      
       // const response = await deleteBook(bookId, token);
 
       // if (!response.ok) {
@@ -121,8 +117,10 @@ const SavedBooks = () => {
     } catch (err) {
       console.error(err);
     }
-  }
-  delBk().then(setUserData(bookDetails.deleteBook));
+  // }
+  // delBk().then(()=>{console.log(bookDetails);
+                    // setUserData(bookDetails.deleteBook);
+                    // console.log("UPDATING")});
   };
 
   // if data isn't here yet, say so
