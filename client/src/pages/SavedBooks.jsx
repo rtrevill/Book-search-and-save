@@ -24,14 +24,16 @@ const SavedBooks = () => {
   const getID = Auth.getProfile().data._id;
   console.log(getID);
 
-  const { loading, data } = useQuery(QUERY_USER, {
+  const { loading, error, data } = useQuery(QUERY_USER, {
       variables: { userId: getID }
-  });
-
+  }, {onCompleted: setUserData});
   console.log(data);
 
   const bookData = data?.getSingleUser || [];
-
+  
+  if(!error&&!loading&&(bookData!==userData)){
+    setUserData(bookData)
+  }
   // console.log(data.getSingleUser)
   console.log(bookData.savedBooks);
   // setUserData(data); 
@@ -50,6 +52,10 @@ const SavedBooks = () => {
   console.log(userDataLength);
 
   useEffect(() => {
+    // if (!error&&!loading){
+    //   setUserData(userData => bookData);
+    //   console.log("bookData");
+    // }
     const getUserData = async () => {
       try {
         const token = Auth.loggedIn() ? Auth.getToken() : null;
@@ -70,7 +76,6 @@ const SavedBooks = () => {
         console.log(data);
 
         
-        setUserData(bookData);
         
         console.log(userData);
       } catch (err) {
@@ -124,6 +129,9 @@ const SavedBooks = () => {
   if (!userDataLength) {
     return <h2>LOADING...</h2>;
   }
+  // if (loading) {
+  //   return <div>Loading...</div>
+  // }
 
   return (
     <>
