@@ -33,7 +33,6 @@ const resolvers = {
     createUser: async(_, {username, email, password}) => {
       const user = await User.create({username, email, password});
       const token = signToken(user)
-      console.log(user)
       return { token, user};
     },
 
