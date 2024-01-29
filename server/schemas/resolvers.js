@@ -31,8 +31,6 @@ const resolvers = {
     },
 
     createUser: async(_, {username, email, password}) => {
-      // console.log("You are in the back end")
-      // console.log(username, email, password)
       const user = await User.create({username, email, password});
       const token = signToken(user)
       console.log(user)
