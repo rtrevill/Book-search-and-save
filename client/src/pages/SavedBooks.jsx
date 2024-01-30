@@ -14,10 +14,25 @@ import { removeBookId } from '../utils/localStorage';
 
 import { QUERY_USER } from '../utils/queries';
 import { DELETE_BOOK } from '../utils/mutations';
-// import { DELETE_BOOK } from '../utils/mutations';
 
 const SavedBooks = () => {
-  const [userData, setUserData] = useState({});
+  // const [userData, setUserData] = useState({});
+
+  const getID = Auth.getProfile().data._id;
+
+  const { loading, error, data } = useQuery(QUERY_USER, {
+    variables: { userId: getID }
+    // , pollInterval: 500
+});
+// if (data){
+//   console.log(data)
+//   data?.getSingleUser&&setUserData(data.getSingleUser);
+// console.log(userData);
+// }
+
+const userData = data?.getSingleUser;
+
+
 
   const [deleteBook, {error: bookError, data: bookDetails}] = useMutation(DELETE_BOOK, {
     refetchQueries: [
@@ -25,35 +40,37 @@ const SavedBooks = () => {
         'getSingleUser'
     ],
    });
-  console.log(bookDetails);
-  const getID = Auth.getProfile().data._id;
+  // console.log(bookDetails);
 
-  const { loading, error, data } = useQuery(QUERY_USER, {
-      variables: { userId: getID }
-      , pollInterval: 500
-  });
 
-  const bookData = data?.getSingleUser || [];
-
-  if(!error&&!loading&&(bookData!==userData)){
-    setUserData(bookData)
+//   const bookData = data?.getSingleUser || [];
+// console.log({bookData});
+  if (!Auth.loggedIn()){
+    console.log("NO GOOD")
+    return <Navigate to="/" />;
   }
 
-  console.log(userData); 
+
+  // if(!error&&!loading&&(bookData!==userData)){
+  //   setUserData(bookData)
+  //   console.log(userData);
+  // }
+
+  // console.log(userData); 
 
   // use this to determine if `useEffect()` hook needs to run again
-  const userDataLength = Object.keys(userData).length;
+  // const userDataLength = Object.keys(userData).length;
 
-  console.log(userDataLength);
+  // console.log(userDataLength);
 
-  useEffect(() => {
-    const getUserData = async () => {
-      try {
-        const token = Auth.loggedIn() ? Auth.getToken() : null;
+  // useEffect(() => {
+  //   const getUserData = async () => {
+  //     try {
+  //       const token = Auth.loggedIn() ? Auth.getToken() : null;
 
-        if (!token) {
-          return false;
-        }  
+  //       if (!token) {
+  //         return false;
+  //       }  
 
         // const response = await getMe(token);
 
@@ -64,18 +81,18 @@ const SavedBooks = () => {
         // const user = await response.json();
 
         // setUserData(user);
-        console.log(data);
+    //     console.log(data);
 
         
         
-        console.log(userData);
-      } catch (err) {
-        console.error(err);
-      }
-    };
+    //     console.log(userData);
+    //   } catch (err) {
+    //     console.error(err);
+    //   }
+    // };
 
-    getUserData();
-  }, [5]);
+  //   getUserData();
+  // }, []);
   // }, [userDataLength]);
 
 
@@ -96,7 +113,6 @@ const SavedBooks = () => {
         }
       }, {onCompleted: (data) => console.log(data)})
       removeBookId(bookId);
-      console.log(bookDetails);
       const bookCheck = bookDetails;
       if(bookDetails){
         console.log(bookCheck);
@@ -124,12 +140,10 @@ const SavedBooks = () => {
   };
 
   // if data isn't here yet, say so
-  if (!userDataLength) {
+  // if (loading){
+  if (loading) {
     return <h2>LOADING...</h2>;
   }
-  // if (loading) {
-  //   return <div>Loading...</div>
-  // }
 
   return (
     <>
